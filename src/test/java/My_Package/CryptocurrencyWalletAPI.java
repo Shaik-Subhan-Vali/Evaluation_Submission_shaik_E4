@@ -59,5 +59,51 @@ public class CryptocurrencyWalletAPI {
 		Res.jsonPath().getString("transactions[0].amount").equals("10.5");
 		
 
-	}	
+	}		
+	@Test
+	public void Transfer_ETH() {
+		JSONObject json = new JSONObject();
+		json.put("recipient_address", "0x1234567890ABCDEF");
+		json.put("amount", "5.0");
+		json.put("currency", "ETH");
+		Response Res = given().contentType(ContentType.JSON).body(json.toJSONString()).when().post("https://crypto-wallet-server.mock.beeceptor.com/api/v1/transactions");
+			
+		Res.then().statusCode(200).log().all();
+		Res.jsonPath().getString("id").equals("98765");
+		Res.jsonPath().getString("currency").equals("ETH");
+
+	}
+	@Test
+	public void Calculate_transaction_fees() {
+		JSONObject json = new JSONObject();
+		json.put("recipient_address", "0x1234567890ABCDEF");
+		json.put("amount", "2.5");
+		json.put("currency", "BTC");
+		Response Res = given().contentType(ContentType.JSON).body(json.toJSONString()).when().post("https://crypto-wallet-server.mock.beeceptor.com/api/v1/transaction_fee");
+			
+		Res.then().statusCode(200).log().all();
+		Res.jsonPath().getString("fee").equals("0.0005");
+		Res.jsonPath().getString("currency").equals("BTC");
+
+	}
+	
+	@Test
+	public void Get_available_exchange_rates() {
+		Response Res = given().get("https://crypto-wallet-server.mock.beeceptor.com/api/v1/exchange_rates");
+		Res.then().statusCode(200).log().all();
+		Res.jsonPath().getString("BTC").equals("42345.67");
+		Res.jsonPath().getString("ETH").equals("2567.89");
+		Res.jsonPath().getString("USD").equals("1.0");
+
+	}
+	
 }
+
+
+
+
+
+
+
+
+
