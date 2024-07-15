@@ -39,9 +39,25 @@ public class CryptocurrencyWalletAPI {
 		.then().statusCode(200).log().all();
 		
 		Res.jsonPath().getString("token_type").equals("bearer");
-	
 		
 	}
-
 	
+	@Test
+	public void Retrieve_wallet_balance() {
+		Response Res = given().get("https://crypto-wallet-server.mock.beeceptor.com/api/v1/balance");
+		Res.then().statusCode(200).log().all();
+		Res.jsonPath().getString("balance").equals("100.25");
+		Res.jsonPath().getString("currency").equals("BTC");
+		
+	}
+	@Test
+	public void List_transactions() {
+		Response Res = given().get("https://crypto-wallet-server.mock.beeceptor.com/api/v1/transactions");
+		Res.then().statusCode(200).log().all();
+		
+		Res.jsonPath().getString("transactions[0].id").equals("12345");
+		Res.jsonPath().getString("transactions[0].amount").equals("10.5");
+		
+
+	}	
 }
